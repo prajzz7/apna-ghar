@@ -15,6 +15,10 @@ export function ApartmentDetail() {
     const [activeTab, setActiveTab] = useState('overview');
     const [preview, setPreview] = useState(null);
 
+    const videos = Array.isArray(apartment?.videos) && apartment.videos.length
+        ? apartment.videos
+        : (apartment?.video ? [apartment.video] : []);
+
     useEffect(() => {
         if (!preview) return;
 
@@ -186,18 +190,24 @@ export function ApartmentDetail() {
                                 {apartment.video && (
                                     <div className="mt-8">
                                         <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Video /> Video Tour</h3>
-                                        <button
-                                            type="button"
-                                            className="w-full rounded-xl overflow-hidden shadow-lg bg-black focus:outline-none"
-                                            onClick={() => setPreview({ kind: 'video', src: apartment.video, title: 'Video Tour' })}
-                                        >
-                                            <div className="relative">
-                                                <video controls className="w-full bg-black">
-                                                    <source src={resolveAsset(apartment.video)} type="video/mp4" />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            </div>
-                                        </button>
+
+                                        <div className="grid gap-4">
+                                            {videos.map((src, index) => (
+                                                <button
+                                                    key={src}
+                                                    type="button"
+                                                    className="w-full rounded-xl overflow-hidden shadow-lg bg-black focus:outline-none"
+                                                    onClick={() => setPreview({ kind: 'video', src, title: videos.length > 1 ? `Video Tour ${index + 1}` : 'Video Tour' })}
+                                                >
+                                                    <div className="relative">
+                                                        <video controls className="w-full bg-black">
+                                                            <source src={resolveAsset(src)} type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
                             </motion.div>

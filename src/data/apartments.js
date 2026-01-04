@@ -1,28 +1,57 @@
 export const apartments = [
   {
-    id: 1,
-    name: "Sunrise Heights",
-    location: "Koramangala, Bangalore",
+    id: 0,
+    name: "Rudra Paradise 633 sqft - 2 BHK",
+    location: "Prabhat Colony, Mumbai",
     status: "Visited",
-    priceQuote: "₹1.45 Cr",
-    negotiatedPrice: "₹1.40 Cr",
+    priceQuote: "₹2.36 Cr",
+    negotiatedPrice: "₹2.3 Cr",
     details: {
-      type: "3 BHK",
-      size: "1850 sqft",
-      possession: "Dec 2025",
-      amenities: ["Pool", "Gym", "Clubhouse", "24/7 Security"],
+      type: "2 BHK",
+      size: "633 sqft",
+      possession: "Ready",
+      amenities: ["NIL"],
     },
     images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=1000&auto=format&fit=crop"
+      // "src/assets/rudra-paradise/rudra_banner.jpeg",
+      "assets/rudra-paradise/Rudra-CostSheet.jpeg"
     ],
-    video: "https://www.w3schools.com/html/mov_bbb.mp4", // Dummy video
+    videos: [
+      "assets/rudra-paradise/Rudra-633sqft.mp4",
+      // "assets/rudra-paradise/Rudra-758sqft.mp4"
+    ],
+    video: "assets/rudra-paradise/Rudra-633sqft.mp4",
     documents: [
-      { name: "Floor Plan A.pdf", type: "pdf", size: "2.4 MB", url: "assets/akkalkot to mumbai.pdf" },
-      { name: "Cost Sheet.pdf", type: "pdf", size: "1.1 MB", url: "assets/TEST.pdf" },
-      { name: "Legal Opinion.pdf", type: "pdf", size: "4.5 MB", url: "assets/TEST.pdf" }
+      { name: "Rudra Paradise Brochure.pdf", type: "pdf", size: "15.1 MB", url: "assets/rudra-paradise/Rudra_Paradise_brochure.pdf" }
     ],
-    notes: "Liked the balcony view. Negotiated price includes car parking. Builder promised modular kitchen."
+    notes: "Santacruz Station and Metro Station very close. Good Locality. Good amount of Natural Light in the room"
+  },
+  {
+    id: 1,
+    name: "Rudra Paradise 758 sqft - 2 BHK",
+    location: "Prabhat Colony, Mumbai",
+    status: "Visited",
+    priceQuote: "₹2.5 Cr",
+    negotiatedPrice: "₹2.5 Cr",
+    details: {
+      type: "2 BHK",
+      size: "758 sqft",
+      possession: "Ready",
+      amenities: ["NIL"],
+    },
+    images: [
+      // "src/assets/rudra-paradise/rudra_banner.jpeg",
+      // "assets/rudra-paradise/Rudra-CostSheet.jpeg"
+    ],
+    videos: [
+      // "assets/rudra-paradise/Rudra-633sqft.mp4",
+      "assets/rudra-paradise/Rudra-758sqft.mp4"
+    ],
+    video: "assets/rudra-paradise/Rudra-758sqft.mp4",
+    documents: [
+      { name: "Rudra Paradise Brochure.pdf", type: "pdf", size: "15.1 MB", url: "assets/rudra-paradise/Rudra_Paradise_brochure.pdf" }
+    ],
+    notes: "Santacruz Station and Metro Station very close. Good Locality. Good amount of Natural Light in the room"
   },
   {
     id: 2,
