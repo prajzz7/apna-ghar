@@ -15,9 +15,25 @@ export function ApartmentDetail() {
     const [activeTab, setActiveTab] = useState('overview');
     const [preview, setPreview] = useState(null);
 
+    const images = Array.isArray(apartment?.images) ? apartment.images : [];
+    const documents = Array.isArray(apartment?.documents) ? apartment.documents : [];
+
     const videos = Array.isArray(apartment?.videos) && apartment.videos.length
         ? apartment.videos
         : (apartment?.video ? [apartment.video] : []);
+
+    const hasMedia = images.length > 0 || videos.length > 0;
+    const hasDocuments = documents.length > 0;
+    const tabs = [
+        'overview',
+        ...(hasMedia ? ['media'] : []),
+        ...(hasDocuments ? ['documents'] : []),
+    ];
+
+    useEffect(() => {
+        if (activeTab === 'media' && !hasMedia) setActiveTab('overview');
+        if (activeTab === 'documents' && !hasDocuments) setActiveTab('overview');
+    }, [activeTab, hasDocuments, hasMedia, id]);
 
     useEffect(() => {
         if (!preview) return;
@@ -48,12 +64,18 @@ export function ApartmentDetail() {
 
             {/* Hero Section */}
             <div className="relative h-[40vh] md:h-[50vh] rounded-3xl overflow-hidden shadow-2xl mb-8 group">
-                <motion.img
-                    layoutId={`image-${apartment.id}`}
-                    src={resolveAsset(apartment.images[0])}
-                    alt={apartment.name}
-                    className="w-full h-full object-cover"
-                />
+                {apartment.banner || images[0] ? (
+                    <motion.img
+                        layoutId={`image-${apartment.id}`}
+                        src={resolveAsset(apartment.banner || images[0])}
+                        alt={apartment.name}
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                        <ImageIcon size={44} className="text-slate-300" />
+                    </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                 <div className="absolute bottom-0 left-0 p-6 md:p-10 w-full">
@@ -99,7 +121,7 @@ export function ApartmentDetail() {
 
                     {/* Tabs */}
                     <div className="flex gap-2 border-b border-slate-200 pb-1 overflow-x-auto">
-                        {['overview', 'media', 'documents'].map(tab => (
+                        {tabs.map(tab => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
@@ -128,18 +150,24 @@ export function ApartmentDetail() {
                             >
                                 {/* Stats Grid */}
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    {apartment.details.type && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                                         <p className="text-slate-400 text-xs uppercase font-bold mb-1">Configuration</p>
                                         <p className="text-lg font-semibold text-slate-800">{apartment.details.type}</p>
-                                    </div>
-                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                        <p className="text-slate-400 text-xs uppercase font-bold mb-1">Super Built-up Area</p>
+                                    </div>}
+                                    {apartment.details.size && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                        <p className="text-slate-400 text-xs uppercase font-bold mb-1">Carpet Area</p>
                                         <p className="text-lg font-semibold text-slate-800">{apartment.details.size}</p>
-                                    </div>
-                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    </div>}
+                                    {apartment.details.possession && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                                         <p className="text-slate-400 text-xs uppercase font-bold mb-1">Possession</p>
                                         <p className="text-lg font-semibold text-slate-800">{apartment.details.possession}</p>
-                                    </div>
+                                    </div>}
+                                    {apartment.details.floors && (
+                                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                            <p className="text-slate-400 text-xs uppercase font-bold mb-1">Floors</p>
+                                            <p className="text-lg font-semibold text-slate-800">{apartment.details.floors}</p>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Amenities */}
@@ -169,25 +197,29 @@ export function ApartmentDetail() {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="space-y-6"
                             >
-                                <h3 className="text-xl font-bold mb-4">Photos</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {apartment.images.map((img, i) => (
-                                        <button
-                                            key={i}
-                                            type="button"
-                                            className="group rounded-xl overflow-hidden focus:outline-none"
-                                            onClick={() => setPreview({ kind: 'image', src: img, title: `Photo ${i + 1}` })}
-                                        >
-                                            <img
-                                                src={resolveAsset(img)}
-                                                alt=""
-                                                className="rounded-xl w-full h-48 object-cover shadow-sm group-hover:shadow-md transition-shadow"
-                                            />
-                                        </button>
-                                    ))}
-                                </div>
+                                {images.length > 0 && (
+                                    <div>
+                                        <h3 className="text-xl font-bold mb-4">Photos</h3>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {images.map((img, i) => (
+                                                <button
+                                                    key={i}
+                                                    type="button"
+                                                    className="group rounded-xl overflow-hidden focus:outline-none"
+                                                    onClick={() => setPreview({ kind: 'image', src: img, title: `Photo ${i + 1}` })}
+                                                >
+                                                    <img
+                                                        src={resolveAsset(img)}
+                                                        alt=""
+                                                        className="rounded-xl w-full h-48 object-cover shadow-sm group-hover:shadow-md transition-shadow"
+                                                    />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
-                                {apartment.video && (
+                                {videos.length > 0 && (
                                     <div className="mt-8">
                                         <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Video /> Video Tour</h3>
 
@@ -221,11 +253,14 @@ export function ApartmentDetail() {
                                 className="space-y-4"
                             >
                                 <div className="grid gap-3">
-                                    {apartment.documents.map((doc, idx) => (
+                                    {documents.map((doc, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-md transition-all group cursor-pointer"
-                                            onClick={() => setPreview({ kind: 'pdf', src: doc.url, title: doc.name })}
+                                            className={`flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl transition-all group ${doc.url ? 'hover:border-blue-400 hover:shadow-md cursor-pointer' : 'opacity-70 cursor-default'}`}
+                                            onClick={() => {
+                                                if (!doc.url) return;
+                                                setPreview({ kind: 'pdf', src: doc.url, title: doc.name });
+                                            }}
                                         >
                                             <div className="flex items-center gap-4">
                                                 <div className="w-10 h-10 bg-red-50 text-red-500 rounded-lg flex items-center justify-center">
@@ -238,9 +273,10 @@ export function ApartmentDetail() {
                                             </div>
                                             <button
                                                 type="button"
-                                                className="text-blue-600 text-sm font-medium px-4 py-2 bg-blue-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className={`text-blue-600 text-sm font-medium px-4 py-2 bg-blue-50 rounded-lg transition-opacity ${doc.url ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
+                                                    if (!doc.url) return;
                                                     setPreview({ kind: 'pdf', src: doc.url, title: doc.name });
                                                 }}
                                             >

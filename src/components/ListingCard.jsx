@@ -1,8 +1,11 @@
 import React from 'react';
 import { MapPin, ArrowRight, Home, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { resolveAsset } from '../utils/assetResolver';
 
 export function ListingCard({ apartment, onClick }) {
+    const coverSrc = apartment?.banner || (Array.isArray(apartment?.images) ? apartment.images[0] : null);
+
     return (
         <motion.div
             layoutId={`card-${apartment.id}`}
@@ -17,9 +20,18 @@ export function ListingCard({ apartment, onClick }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                 
                 {/* Placeholder for image */}
-                <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                    <Home size={32} className="text-slate-300" />
-                </div>
+                {coverSrc ? (
+                    <img
+                        src={resolveAsset(coverSrc)}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                        <Home size={32} className="text-slate-300" />
+                    </div>
+                )}
 
                 {/* Status Badge */}
                 <div className="absolute top-3 right-3 z-20">
