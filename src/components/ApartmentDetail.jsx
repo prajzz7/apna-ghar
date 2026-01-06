@@ -4,7 +4,7 @@ import { apartments } from '../data/apartments';
 import { resolveAsset } from '../utils/assetResolver';
 import {
     ArrowLeft, MapPin, Calendar, Ruler, CheckCircle,
-    FileText, Image as ImageIcon, Video, Share2, Heart, X
+    FileText, Image as ImageIcon, Video, Share2, Heart, X, ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -275,16 +275,16 @@ export function ApartmentDetail() {
 
                                 {/* Amenities */}
                                 {Array.isArray(apartment.details?.amenities) && apartment.details.amenities.length > 0 && (
-                                <div>
-                                    <h3 className="text-xl font-bold mb-4 text-slate-900">Amenities</h3>
-                                    <div className="flex flex-wrap gap-3">
-                                        {apartment.details.amenities.map(item => (
-                                            <span key={item} className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-100 flex items-center gap-2">
-                                                <CheckCircle size={14} className="text-indigo-500" /> {item}
-                                            </span>
-                                        ))}
+                                    <div>
+                                        <h3 className="text-xl font-bold mb-4 text-slate-900">Amenities</h3>
+                                        <div className="flex flex-wrap gap-3">
+                                            {apartment.details.amenities.map(item => (
+                                                <span key={item} className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-100 flex items-center gap-2">
+                                                    <CheckCircle size={14} className="text-indigo-500" /> {item}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
                                 )}
 
                                 {/* Notes */}
@@ -444,14 +444,25 @@ export function ApartmentDetail() {
                                 <div className="min-w-0">
                                     <p className="font-semibold text-slate-900 truncate">{preview.title}</p>
                                 </div>
-                                <button
-                                    type="button"
-                                    className="btn-icon"
-                                    onClick={() => setPreview(null)}
-                                    aria-label="Close preview"
-                                >
-                                    <X size={18} />
-                                </button>
+                                <div className="flex items-center gap-2">
+                                    <a
+                                        href={resolveAsset(preview.src)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="btn-icon text-blue-600 bg-blue-50 border-blue-100 hover:bg-blue-100"
+                                        title="Open in new tab"
+                                    >
+                                        <ExternalLink size={18} />
+                                    </a>
+                                    <button
+                                        type="button"
+                                        className="btn-icon"
+                                        onClick={() => setPreview(null)}
+                                        aria-label="Close preview"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="flex-1 bg-slate-50">
@@ -475,11 +486,28 @@ export function ApartmentDetail() {
                                 )}
 
                                 {preview.kind === 'pdf' && (
-                                    <iframe
-                                        src={resolveAsset(preview.src)}
-                                        title={preview.title}
-                                        className="w-full h-full"
-                                    />
+                                    <div className="w-full h-full overflow-y-auto -webkit-overflow-scrolling-touch">
+                                        <object
+                                            data={resolveAsset(preview.src)}
+                                            type="application/pdf"
+                                            className="w-full h-full min-h-[50vh]"
+                                        >
+                                            <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-slate-50">
+                                                <FileText size={48} className="text-slate-300 mb-4" />
+                                                <p className="text-slate-600 mb-4">
+                                                    Unable to display PDF directly.
+                                                </p>
+                                                <a
+                                                    href={resolveAsset(preview.src)}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="btn-primary"
+                                                >
+                                                    Download / Open PDF
+                                                </a>
+                                            </div>
+                                        </object>
+                                    </div>
                                 )}
                             </div>
                         </motion.div>
