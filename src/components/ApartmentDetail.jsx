@@ -150,19 +150,19 @@ export function ApartmentDetail() {
                             >
                                 {/* Stats Grid */}
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    {apartment.details.type && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    {apartment.details?.type && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                                         <p className="text-slate-400 text-xs uppercase font-bold mb-1">Configuration</p>
                                         <p className="text-lg font-semibold text-slate-800">{apartment.details.type}</p>
                                     </div>}
-                                    {apartment.details.size && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    {apartment.details?.size && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                                         <p className="text-slate-400 text-xs uppercase font-bold mb-1">Carpet Area</p>
                                         <p className="text-lg font-semibold text-slate-800">{apartment.details.size}</p>
                                     </div>}
-                                    {apartment.details.possession && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    {apartment.details?.possession && <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                                         <p className="text-slate-400 text-xs uppercase font-bold mb-1">Possession</p>
                                         <p className="text-lg font-semibold text-slate-800">{apartment.details.possession}</p>
                                     </div>}
-                                    {apartment.details.floors && (
+                                    {apartment.details?.floors && (
                                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                                             <p className="text-slate-400 text-xs uppercase font-bold mb-1">Floors</p>
                                             <p className="text-lg font-semibold text-slate-800">{apartment.details.floors}</p>
@@ -170,7 +170,111 @@ export function ApartmentDetail() {
                                     )}
                                 </div>
 
+                                {Array.isArray(apartment.details?.availableSizes) && apartment.details.availableSizes.length > 0 && (
+                                    <div>
+                                        <h3 className="text-xl font-bold mb-4 text-slate-900">Available Sizes</h3>
+                                        <div className="flex flex-wrap gap-3">
+                                            {apartment.details.availableSizes.map((s) => (
+                                                <span
+                                                    key={s}
+                                                    className="px-4 py-2 bg-slate-50 text-slate-800 rounded-full text-sm font-medium border border-slate-200"
+                                                >
+                                                    {s}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {Array.isArray(apartment.details?.highlights) && apartment.details.highlights.length > 0 && (
+                                    <div>
+                                        <h3 className="text-xl font-bold mb-4 text-slate-900">Project Highlights</h3>
+                                        <div className="grid gap-3">
+                                            {apartment.details.highlights.map((h) => (
+                                                <div
+                                                    key={h}
+                                                    className="flex items-start gap-3 p-4 bg-white border border-slate-200 rounded-xl"
+                                                >
+                                                    <CheckCircle size={18} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+                                                    <p className="text-slate-800 font-medium">{h}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {(apartment.details?.address || apartment.details?.mapsLink || apartment.details?.contact) && (
+                                    <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                                        <h3 className="text-xl font-bold mb-4 text-slate-900">Visit / Contact</h3>
+
+                                        {apartment.details?.address && (
+                                            <div className="mb-4">
+                                                <p className="text-xs text-slate-500 uppercase font-semibold mb-1">Address</p>
+                                                <p className="text-slate-800">{apartment.details.address}</p>
+                                            </div>
+                                        )}
+
+                                        <div className="flex flex-col sm:flex-row gap-3">
+                                            {apartment.details?.mapsLink && (
+                                                <a
+                                                    className="btn-outline text-sm inline-flex items-center justify-center"
+                                                    href={apartment.details.mapsLink}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    Open in Maps
+                                                </a>
+                                            )}
+
+                                            {apartment.details?.contact?.phone && (
+                                                <a
+                                                    className="btn-primary text-sm inline-flex items-center justify-center"
+                                                    href={`tel:${apartment.details.contact.phone}`}
+                                                >
+                                                    Call {apartment.details.contact.name || 'Sales'}
+                                                </a>
+                                            )}
+                                        </div>
+
+                                        {apartment.details?.contact && (
+                                            <div className="mt-4 text-sm text-slate-600">
+                                                <p className="font-semibold text-slate-900">
+                                                    {apartment.details.contact.name}
+                                                </p>
+                                                {apartment.details.contact.role && (
+                                                    <p>{apartment.details.contact.role}</p>
+                                                )}
+                                                {apartment.details.contact.phone && (
+                                                    <p className="mt-1">{apartment.details.contact.phone}</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {(Array.isArray(apartment.details?.partners?.developers) || Array.isArray(apartment.details?.partners?.architects)) && (
+                                    <div>
+                                        <h3 className="text-xl font-bold mb-4 text-slate-900">Project Team</h3>
+                                        <div className="grid gap-3">
+                                            {Array.isArray(apartment.details?.partners?.developers) && apartment.details.partners.developers.length > 0 && (
+                                                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                                    <p className="text-slate-400 text-xs uppercase font-bold mb-1">Developers</p>
+                                                    <p className="text-slate-800 font-semibold">{apartment.details.partners.developers.join(', ')}</p>
+                                                </div>
+                                            )}
+
+                                            {Array.isArray(apartment.details?.partners?.architects) && apartment.details.partners.architects.length > 0 && (
+                                                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                                    <p className="text-slate-400 text-xs uppercase font-bold mb-1">Architects</p>
+                                                    <p className="text-slate-800 font-semibold">{apartment.details.partners.architects.join(', ')}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Amenities */}
+                                {Array.isArray(apartment.details?.amenities) && apartment.details.amenities.length > 0 && (
                                 <div>
                                     <h3 className="text-xl font-bold mb-4 text-slate-900">Amenities</h3>
                                     <div className="flex flex-wrap gap-3">
@@ -181,6 +285,7 @@ export function ApartmentDetail() {
                                         ))}
                                     </div>
                                 </div>
+                                )}
 
                                 {/* Notes */}
                                 <div className="bg-amber-50 p-6 rounded-2xl border border-amber-100">

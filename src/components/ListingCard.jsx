@@ -5,6 +5,9 @@ import { resolveAsset } from '../utils/assetResolver';
 
 export function ListingCard({ apartment, onClick }) {
     const coverSrc = apartment?.banner || (Array.isArray(apartment?.images) ? apartment.images[0] : null);
+    const type = apartment?.details?.type;
+    const size = apartment?.details?.size;
+    const possession = apartment?.details?.possession;
 
     return (
         <motion.div
@@ -48,12 +51,16 @@ export function ListingCard({ apartment, onClick }) {
                 <div className="absolute bottom-3 left-3 right-3 z-20">
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-xs font-medium bg-black/70 text-white backdrop-blur-sm px-3 py-1.5 rounded-full inline-flex items-center gap-1">
-                                <Home size={12} /> {apartment.details.type}
-                            </span>
-                            <span className="text-xs font-medium bg-black/70 text-white backdrop-blur-sm px-3 py-1.5 rounded-full">
-                                {apartment.details.size}
-                            </span>
+                            {type && (
+                                <span className="text-xs font-medium bg-black/70 text-white backdrop-blur-sm px-3 py-1.5 rounded-full inline-flex items-center gap-1">
+                                    <Home size={12} /> {type}
+                                </span>
+                            )}
+                            {size && (
+                                <span className="text-xs font-medium bg-black/70 text-white backdrop-blur-sm px-3 py-1.5 rounded-full">
+                                    {size}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -96,9 +103,13 @@ export function ListingCard({ apartment, onClick }) {
                 </div>
 
                 <div className="flex items-center justify-between pt-4 mt-auto border-t border-slate-100">
-                    <span className="text-xs font-medium text-slate-500">
-                        {apartment.details.possession}
-                    </span>
+                    {possession ? (
+                        <span className="text-xs font-medium text-slate-500">
+                            {possession}
+                        </span>
+                    ) : (
+                        <span />
+                    )}
                     <button 
                         className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 group/btn transition-colors"
                         onClick={(e) => {
